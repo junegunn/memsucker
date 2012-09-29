@@ -8,7 +8,6 @@ Junegunn Choi (junegunn.c@gmail.com)
 #include <vector>
 #include <unistd.h>
 #include <sys/mman.h>
-#include <cassert>
 
 using namespace std;
 
