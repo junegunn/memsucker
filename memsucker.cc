@@ -7,15 +7,19 @@ Junegunn Choi (junegunn.c@gmail.com)
 #include <string>
 #include <vector>
 #include <unistd.h>
+#include <sys/mman.h>
 #include <cassert>
 
 using namespace std;
 
 int main(int argc, char *argv[]) {
 #if _POSIX_MEMLOCK > 0
-  assert(mlockall(MCL_CURRENT));
+  if (mlockall(MCL_CURRENT)) {
+    cerr << "mlockall failed. not root?" << endl;
+    exit(1);
+  }
 #else
-  cout << "mlockall not available in this system. Cannot prevent paging out." << endl;
+  cerr << "mlockall not available in this system. Cannot prevent paging out." << endl;
 #endif
 
   const int MEGA = 1024 * 1024;
@@ -29,7 +33,7 @@ int main(int argc, char *argv[]) {
 
     int mb = atoi(input.c_str());
     if (mb < 0) {
-      cout << "Invalid number." << endl;
+      cerr << "Invalid number." << endl;
       continue;
     }
 
