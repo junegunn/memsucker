@@ -12,12 +12,7 @@ Junegunn Choi (junegunn.c@gmail.com)
 using namespace std;
 
 int main(int argc, char *argv[]) {
-#if _POSIX_MEMLOCK > 0
-  if (mlockall(MCL_CURRENT)) {
-    cerr << "mlockall failed. not root?" << endl;
-    exit(1);
-  }
-#else
+#if _POSIX_MEMLOCK < 0
   cerr << "mlockall not available in this system. Cannot prevent paging out." << endl;
 #endif
 
@@ -48,6 +43,12 @@ int main(int argc, char *argv[]) {
 #endif
       megas.push_back(ptr);
     }
+#if _POSIX_MEMLOCK > 0
+    if (mlockall(MCL_CURRENT)) {
+      cerr << "mlockall failed. not root?" << endl;
+      exit(1);
+    }
+#endif
   }
 }
 
